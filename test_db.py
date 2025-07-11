@@ -1,5 +1,4 @@
 from app.database import engine, Base
-
-print("สร้างฐานข้อมูล SQLite...")
+from app.models import User
 Base.metadata.create_all(bind=engine)
-print("สำเร็จ")
+print("สร้างตาราง User เรียบร้อย")
