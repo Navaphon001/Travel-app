@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+
+# Env
+.env
+env/
+venv/
+ENV/
+*.env
+
+# VSCode settings (optional)
+.vscode/
+
+# Testing/coverage
+*.log
+coverage/
+
+# OS
+.DS_Store
+Thumbs.db
