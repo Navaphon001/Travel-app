@@ -5,6 +5,9 @@ app = FastAPI()
 
 app.include_router(register_router)
 app.include_router(login_router)
+app.include_router(travel_router)
+app.include_router(tax_router)
+
 
 @app.get("/")
 def root():
