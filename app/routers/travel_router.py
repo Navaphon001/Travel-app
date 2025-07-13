@@ -15,11 +15,24 @@ def get_db():
 
 @router.post("/", response_model=TravelResponse)
 def create_travel(travel: TravelCreate, db: Session = Depends(get_db)):
-    db_travel = Travel(province=travel.province, description=travel.description)
+    db_travel = Travel(
+        province=travel.province,
+        description=travel.description,
+        tax_reduction=travel.tax_reduction,
+        is_secondary=travel.is_secondary
+    )
     db.add(db_travel)
     db.commit()
     db.refresh(db_travel)
     return db_travel
+
+@router.get("/", response_model=list[TravelResponse])
+def get_all_travels(db: Session = Depends(get_db)):
+    return db.query(Travel).all()
+
+@router.get("/secondary/", response_model=list[TravelResponse])
+def get_secondary_provinces(db: Session = Depends(get_db)):
+    return db.query(Travel).filter(Travel.is_secondary == 1).all()
 
 @router.get("/{province}", response_model=TravelResponse)
 def get_travel_by_province(province: str, db: Session = Depends(get_db)):
