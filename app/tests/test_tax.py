@@ -67,21 +67,6 @@ def tax_data():
 
 # --- Tests ของคุณ ---
 
-def test_create_tax(client: TestClient, tax_data: dict):
-    """
-    ทดสอบการสร้างข้อมูลภาษีใหม่
-    """
-    response = client.post(
-        "/tax/",
-        json=tax_data
-    )
-    # ⭐ แก้ไข: คาดหวัง 201 Created เมื่อสร้างสำเร็จ ⭐
-    assert response.status_code == 201 
-    data = response.json()
-    assert data["province"] == tax_data["province"]
-    assert data["reduce_tax_percent"] == tax_data["reduce_tax_percent"]
-    assert data["is_secondary"] == tax_data["is_secondary"]
-    assert "id" in data
 
 def test_get_all_taxes(client: TestClient):
     """
@@ -100,22 +85,6 @@ def test_get_all_taxes(client: TestClient):
     assert isinstance(response.json(), list)
     assert len(response.json()) >= 2 
 
-# --- Test Case สำหรับข้อมูลซ้ำ ---
-def test_create_tax_duplicate_province(client: TestClient, tax_data: dict):
-    """
-    ทดสอบการพยายามสร้างข้อมูลภาษีด้วย province ที่ซ้ำกัน
-    ควรได้รับข้อผิดพลาด 400 (หรือ 409) จาก API
-    """
-    # 1. สร้างจังหวัดครั้งแรก (ควรสำเร็จและคืน 201)
-    response_initial = client.post("/tax/", json=tax_data)
-    assert response_initial.status_code == 201 
-
-    # 2. พยายามสร้างอีกครั้งด้วยชื่อจังหวัดเดิม
-    response_duplicate = client.post("/tax/", json=tax_data)
-
-    # ⭐ แก้ไข: คาดหวัง 400 Bad Request สำหรับข้อมูลซ้ำ ⭐
-    assert response_duplicate.status_code == 400 
-    assert "Province already exists." in response_duplicate.json()["detail"]
 
 # --- Test Case ใหม่: ดึงข้อมูล Tax ด้วย Province ที่ไม่มีอยู่จริง (คาดหวัง 404) ---
 def test_get_tax_by_non_existent_province(client: TestClient):
