@@ -1,9 +1,15 @@
-from app.auth import get_password_hash, verify_password
+from fastapi.testclient import TestClient
+from app.main import app
 
-hashed = get_password_hash("mypassword")
-print("Hashed:", hashed)
-
-assert verify_password("mypassword", hashed) == True
-assert verify_password("wrongpass", hashed) == False
-
-print("Test auth success!")
+def test_register():
+    client = TestClient(app)
+    response = client.post(
+        "/register/",
+        json={
+            "username": "testuser",
+            "password": "testpass",
+            "fullname": "ทดสอบ ผู้ใช้",
+            "phone": "0812345678"
+        }
+    )
+    assert response.status_code == 200
